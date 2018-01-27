@@ -1,6 +1,8 @@
+import { EMAIL_CHANGED } from './types.js';
+
 export const emailChanged = (text) => (
   {
-    type: 'email_changed',
+    type: EMAIL_CHANGED,
     payload: text
   }
 );
