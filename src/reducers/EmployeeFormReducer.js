@@ -20,7 +20,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
     case EMPLOYEE_CREATED:
       Actions.pop();
-      return { ...state, loading: false };
+      return { ...INITIAL_STATE };
     default:
       return state;
   }
