@@ -7,3 +7,5 @@ export const LOGIN_USER = 'login_user';
 export const EMPLOYEE_FORM_UPDATE = 'employee_form_update';
 export const CREATE = 'create_employee';
 export const EMPLOYEE_CREATED = 'employee_created';
+export const EMPLOYEES_FETCH = 'employees_fetch';
+export const EMPLOYEES_FETCH_SUCCESS = 'employees_fetch_success';
