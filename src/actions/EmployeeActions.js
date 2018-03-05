@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import _ from 'lodash';
 import { EMPLOYEE_FORM_UPDATE,
   CREATE,
   EMPLOYEE_CREATED,
@@ -26,8 +27,15 @@ export const employeesFetch = () => (dispatch) => {
 
   const { currentUser } = firebase.auth();
 
-  firebase.database.ref(`/users/${currentUser.uid}/emplopyees`)
+  firebase.database().ref(`/users/${currentUser.uid}/employees`)
     .on('value', snapshot => {
-      dispatch({ type: EMPLOYEES_FETCH_SUCCESS, payload: snapshot.val() });
+      dispatch({
+        type: EMPLOYEES_FETCH_SUCCESS,
+        payload: convertEmployeesObject(snapshot.val())
+      });
     });
 };
+
+const convertEmployeesObject = (employees) => (
+  _.map(employees, (val, uid) => ({ ...val, uid }))
+);
