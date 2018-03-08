@@ -1,11 +1,19 @@
 import firebase from 'firebase';
 import _ from 'lodash';
-import { EMPLOYEE_FORM_UPDATE,
+import {
+  CLEAR_EMPLOYEE_FORM,
+  EMPLOYEE_FORM_UPDATE,
   CREATE,
+  UPDATE,
   EMPLOYEE_CREATED,
+  EMPLOYEE_UPDATED,
   EMPLOYEES_FETCH,
   EMPLOYEES_FETCH_SUCCESS
 } from './types';
+
+export const clearEmployeeForm = () => ({
+  type: CLEAR_EMPLOYEE_FORM
+});
 
 export const employeeFormUpdate = ({ prop, value }) => ({
     type: EMPLOYEE_FORM_UPDATE,
@@ -20,6 +28,16 @@ export const employeeCreate = ({ name, phone, shift }) => (dispatch) => {
   firebase.database().ref(`/users/${currentUser.uid}/employees`)
     .push({ name, phone, shift })
     .then(dispatch({ type: EMPLOYEE_CREATED }));
+};
+
+export const employeeUpdate = ({ name, phone, shift, uid }) => (dispatch) => {
+  dispatch({ type: UPDATE });
+
+  const { currentUser } = firebase.auth();
+
+  firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
+    .set({ name, phone, shift })
+    .then(dispatch({ type: EMPLOYEE_UPDATED }));
 };
 
 export const employeesFetch = () => (dispatch) => {
