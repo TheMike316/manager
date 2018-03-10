@@ -5,8 +5,10 @@ import {
   EMPLOYEE_FORM_UPDATE,
   CREATE,
   UPDATE,
+  DELETE,
   EMPLOYEE_CREATED,
   EMPLOYEE_UPDATED,
+  EMPLOYEE_DELETED,
   EMPLOYEES_FETCH,
   EMPLOYEES_FETCH_SUCCESS
 } from './types';
@@ -38,6 +40,16 @@ export const employeeUpdate = ({ name, phone, shift, uid }) => (dispatch) => {
   firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
     .set({ name, phone, shift })
     .then(dispatch({ type: EMPLOYEE_UPDATED }));
+};
+
+export const employeeDelete = ({ uid }) => (dispatch) => {
+  dispatch({ type: DELETE });
+
+  const { currentUser } = firebase.auth();
+
+  firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
+    .remove()
+    .then(dispatch({ type: EMPLOYEE_DELETED }));
 };
 
 export const employeesFetch = () => (dispatch) => {

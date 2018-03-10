@@ -1,9 +1,14 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
 import { Card, CardSection, Button, Spinner, Confirm } from './common';
-import { employeeUpdate, employeeFormUpdate } from '../actions';
+import {
+  employeeUpdate,
+  employeeFormUpdate,
+  employeeDelete
+ } from '../actions';
 import EmployeeForm from './EmployeeForm';
 
 class EmployeeEdit extends Component {
@@ -33,7 +38,16 @@ class EmployeeEdit extends Component {
     Communications.text(phone, ` Your upcoming shift is on ${shift}`);
   }
 
-  renderSaveButton() {
+  onAccept() {
+    this.props.employeeDelete({ uid: this.props.employee.uid });
+    this.setState({ ...this.state, showModal: false });
+  }
+
+  onDecline() {
+    this.setState({ ...this.state, showModal: false });
+  }
+
+  renderButtons() {
     if (this.props.loading) {
       return (
         <CardSection>
@@ -41,7 +55,16 @@ class EmployeeEdit extends Component {
         </CardSection>
       );
     }
+    return (
+      <View>
+        {this.renderSaveButton()}
+        {this.renderTextButton()}
+        {this.renderFireButton()}
+      </View>
+    );
+  }
 
+  renderSaveButton() {
     return (
       <CardSection>
         <Button onPress={this.onButtonPress.bind(this)}>
@@ -51,36 +74,37 @@ class EmployeeEdit extends Component {
     );
   }
 
-  onAccept() {
-
+  renderTextButton() {
+    return (
+      <CardSection>
+        <Button onPress={this.onTextPress.bind(this)}>
+          Text Schedule
+        </Button>
+      </CardSection>
+    );
   }
 
-  onDecline() {
-    this.setState({ ...this.state, showModal: false });
+  renderFireButton() {
+    return (
+      <CardSection>
+        <Button
+          onPress={() =>
+            this.setState({
+              ...this.state,
+              showModal: !this.state.showModal
+            })}
+        >
+          Fire Employee
+        </Button>
+      </CardSection>
+    );
   }
 
   render() {
     return (
       <Card>
         <EmployeeForm />
-        {this.renderSaveButton()}
-        <CardSection>
-          <Button onPress={this.onTextPress.bind(this)}>
-            Text Schedule
-          </Button>
-        </CardSection>
-
-        <CardSection>
-          <Button
-            onPress={() =>
-              this.setState({
-                ...this.state,
-                showModal: !this.state.showModal
-              })}
-          >
-            Fire Employee
-          </Button>
-        </CardSection>
+        {this.renderButtons()}
         <Confirm
           visible={this.state.showModal}
           onAccept={this.onAccept.bind(this)}
@@ -101,5 +125,6 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   employeeFormUpdate,
-  employeeUpdate
+  employeeUpdate,
+  employeeDelete
 })(EmployeeEdit);

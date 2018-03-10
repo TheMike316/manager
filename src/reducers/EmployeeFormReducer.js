@@ -4,8 +4,10 @@ import {
   EMPLOYEE_FORM_UPDATE,
   CREATE,
   UPDATE,
+  DELETE,
   EMPLOYEE_CREATED,
-  EMPLOYEE_UPDATED
+  EMPLOYEE_UPDATED,
+  EMPLOYEE_DELETED
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -23,9 +25,11 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, [action.payload.prop]: action.payload.value };
     case CREATE:
     case UPDATE:
+    case DELETE:
       return { ...state, loading: true };
     case EMPLOYEE_CREATED:
     case EMPLOYEE_UPDATED:
+    case EMPLOYEE_DELETED:
       Actions.pop();
       return { ...INITIAL_STATE };
     default:
